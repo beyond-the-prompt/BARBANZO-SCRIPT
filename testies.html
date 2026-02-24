@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>BARBANZO NAV SOLID</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; background:#000; color:#fff; position: relative; line-height: 1.5; transition: background-color 0.3s ease; }
+    .script-font { font-family: 'Cinzel', serif; letter-spacing: 0.05em; }
+    .chrome { color: #d0d0d0; text-shadow: 0 1px 1px rgba(0,0,0,0.6), 0 -1px 1px rgba(255,255,255,0.2); } /* Improved engraved effect with better readability */
+    .metallic-btn { background: linear-gradient(145deg, #e0e0e0, #a0a0a0); color: #000; box-shadow: 0 0 15px rgba(0,255,255,0.5), 0 4px 6px rgba(0,0,0,0.5); transition: all 0.2s; border-radius: 1.5rem; font-weight: 600; }
+    .metallic-btn:hover { transform: scale(1.02); box-shadow: 0 0 20px rgba(0,255,255,0.6), 0 6px 8px rgba(0,0,0,0.6); }
+    .metallic-btn:active { transform: scale(0.98); }
+    .shimmer { animation: shimmer 3s infinite linear; background: linear-gradient(90deg, transparent, rgba(192,192,192,0.3), transparent); background-size: 200% 100%; }
+    @keyframes shimmer { 0% { background-position: -200% 0 } 100% { background-position: 200% 0 } }
+    .matte { background: #0a0a0a; }
+    .hidden { display: none !important; }
+    .nav-btn { color: #888; transition: all .2s; display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; }
+    .nav-btn-active { color: #c0c0c0 !important; }
+    .nav-btn:hover { transform: translateY(-2px); }
+
+    /* Watermark background */
+    body::before {
+      content: 'BARBANZO SCRIPT BARBANZO SCRIPT BARBANZO SCRIPT BARBANZO SCRIPT BARBANZO SCRIPT';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      color: rgba(192,192,192,0.05); /* Faded silver */
+      font-size: 10rem; /* Larger for better match */
+      font-family: 'Cinzel', serif;
+      white-space: nowrap;
+      overflow: hidden;
+      line-height: 1;
+      transform: rotate(-10deg); /* Adjusted tilt */
+      pointer-events: none;
+      z-index: -1;
+      animation: subtle-move 30s linear infinite;
+    }
+    @keyframes subtle-move { 0% { transform: translateX(0) rotate(-10deg); } 100% { transform: translateX(-30%) rotate(-10deg); } }
+
+    /* Input styles (cyan border) */
+    input, textarea { border-color: rgba(0,255,255,0.3) !important; /* Cyan glow */
+      box-shadow: 0 0 5px rgba(0,255,255,0.2); background: #111 !important; color: #fff !important; border-radius: 9999px !important; font-size: 1rem; padding: 1rem; resize: vertical; min-height: 100px; transition: box-shadow 0.3s ease; }
+
+    input:focus, textarea:focus { border-color: rgba(0,255,255,0.8) !important; box-shadow: 0 0 10px rgba(0,255,255,0.4); }
+
+    /* Preset buttons */
+    .preset-btn { background: #222; color: #fff; border-radius: 9999px; padding: 0.75rem 1.25rem; font-size: 1rem; font-weight: 600; transition: transform 0.2s; }
+    .preset-btn:hover { transform: scale(1.05); }
+
+    /* History items */
+    .history-item { background: #111; border-radius: 1rem; padding: 1.25rem; margin-bottom: 0.75rem; position: relative; font-size: 1rem; transition: opacity 0.3s ease; }
+    .history-item:hover { opacity: 0.9; }
+    .history-view-btn { background: #333; color: #fff; border-radius: 0.5rem; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 600; }
+    .history-delete-btn { position: absolute; top: 0.5rem; right: 0.5rem; color: #f00; }
+
+    /* Bottom Nav */
+    footer { background: #0a0a0a; border-top: 1px solid #333; transition: background-color 0.3s ease; }
+
+    /* Output Modal */
+    #output-modal { background: rgba(0,0,0,0.8); transition: opacity 0.3s ease; }
+    #output-content { background: #111; border: 1px solid #333; max-height: 80vh; overflow-y: auto; font-size: 1rem; line-height: 1.6; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Labels and text improvements */
+    label { font-weight: 600; letter-spacing: 0.05em; }
+    p, div { font-size: 1rem; }
+  </style>
+</head>
+<body class="min-h-screen overflow-x-hidden pb-24">
+
+  <!-- SPLASH -->
+  <div id="splash" class="fixed inset-0 flex flex-col items-center justify-center z-50 matte">
+    <div class="text-center">
+      <h1 class="text-7xl font-black tracking-tighter script-font chrome shimmer">Barbanzo</h1>
+      <p class="text-white text-3xl tracking-widest mt-2 script-font">Script</p>
+      <p class="mt-12 text-sm text-zinc-400">Michael Sanzo • William Barbeau</p>
+    </div>
+    <button onclick="enterAcademy()" class="mt-20 px-12 py-6 metallic-btn font-bold tracking-widest">
+      ENTER THE RITUAL
+    </button>
+  </div>
+
+  <!-- APP -->
+  <div id="app" class="hidden min-h-screen">
+
+    <!-- HOME -->
+    <div id="home" class="pt-20 max-w-md mx-auto px-6">
+      <h2 class="text-4xl font-black chrome script-font mb-4 text-center">Barbanzo Script</h2>
+      <p class="text-white text-xl text-center mb-8">Master Script Prompt Engineering</p>
+      
+      <div class="bg-zinc-950 border border-gray-700 p-8 rounded-3xl text-sm leading-relaxed max-h-[30vh] overflow-y-auto mb-8">
+        I started all of this with a broken smartphone and a computer in a motel room...<br><br>
+        BARBANZO SCRIPT wasn’t born in a classroom. It was born in silence, in repetition, in instinct, in discipline...<br><br>
+        — Brother (Michael Sanzo)
+      </div>
+
+      <!-- Prompt Input Section -->
+      <div class="mb-6">
+        <p class="text-gray-400 text-xs uppercase mb-2">PROMPT INPUT</p>
+        <input id="prompt-input" type="text" class="w-full px-5 py-4 text-sm" placeholder="Enter your prompt here...">
+      </div>
+
+      <!-- Style Presets -->
+      <div class="mb-6">
+        <p class="text-gray-400 text-xs uppercase mb-2">STYLE PRESETS</p>
+        <div class="flex space-x-2">
+          <button class="preset-btn flex-1" onclick="selectPreset('Elegant')">Elegant</button>
+          <button class="preset-btn flex-1" onclick="selectPreset('Custom')">Custom</button>
+          <button class="preset-btn flex-1" onclick="selectPreset('Classic')">Classic</button>
+        </div>
+      </div>
+
+      <!-- Generate Button -->
+      <button onclick="generateScript()" class="w-full py-6 metallic-btn font-black text-xl mb-8">GENERATE</button>
+
+      <!-- History Section -->
+      <div id="history-section" class="mb-8">
+        <p class="text-gray-400 text-xs uppercase mb-2">HISTORY</p>
+        <div id="history-list"></div>
+      </div>
+
+      <!-- Navigation Buttons -->
+      <button onclick="navTo('beginner')" class="w-full py-4 metallic-btn font-bold mb-4">Beginner Builder</button>
+      <button onclick="navTo('expert')" class="w-full py-4 metallic-btn font-bold mb-4">Expert Editor</button>
+      <button onclick="navTo('history')" class="w-full py-4 metallic-btn font-bold mb-4">View History</button>
+      <button onclick="navTo('profile')" class="w-full py-4 metallic-btn font-bold mb-4">Certifications</button>
+    </div>
+
+    <!-- BEGINNER -->
+    <div id="beginner" class="hidden pt-20 max-w-md mx-auto px-6">
+      <h2 class="text-3xl font-black chrome script-font mb-8 text-center">BEGINNER BUILDER</h2>
+      <div class="space-y-6">
+        <div><label class="text-white block mb-1 text-xs uppercase">META</label><textarea id="b-meta" rows="3" class="w-full bg-zinc-900 border border-cyan-500/40 rounded-xl p-4 text-sm" placeholder="MODE: IMAGE\nTONE: ULTRA-REALISTIC"></textarea></div>
+        <div><label class="text-white block mb-1 text-xs uppercase">SUBJECT</label><textarea id="b-subject" rows="3" class="w-full bg-zinc-900 border border-cyan-500/40 rounded-xl p-4 text-sm" placeholder="TYPE: HUMAN\nDETAILS: bald head..."></textarea></div>
+        <div><label class="text-white block mb-1 text-xs uppercase">CAMERA</label><textarea id="b-camera" rows="3" class="w-full bg-zinc-900 border border-cyan-500/40 rounded-xl p-4 text-sm" placeholder="MOVE: slow dolly-in"></textarea></div>
+        <div><label class="text-white block mb-1 text-xs uppercase">LIGHTING</label><textarea id="b-lighting" rows="3" class="w-full bg-zinc-900 border border-cyan-500/40 rounded-xl p-4 text-sm" placeholder="TYPE: industrial"></textarea></div>
+        <div><label class="text-white block mb-1 text-xs uppercase">ENVIRONMENT</label><textarea id="b-env" rows="3" class="w-full bg-zinc-900 border border-cyan-500/40 rounded-xl p-4 text-sm" placeholder="LOCATION: rain-slicked alley"></textarea></div>
+        <div><label class="text-white block mb-1 text-xs uppercase">MOTION</label><textarea id="b-motion" rows="3" class="w-full bg-zinc-900 border border-cyan-500/40 rounded-xl p-4 text-sm" placeholder="ACTION: subtle wind blowing"></textarea></div>
+        <div><label class="text-white block mb-1 text-xs uppercase">ATMOSPHERE</label><textarea id="b-atmo" rows="3" class="w-full bg-zinc-900 border border-cyan-500/40 rounded-xl p-4 text-sm" placeholder="MOOD: tense and mysterious"></textarea></div>
+        <div><label class="text-white block mb-1 text-xs uppercase">STYLE</label><textarea id="b-style" rows="3" class="w-full bg-zinc-900 border border-cyan-500/40 rounded-xl p-4 text-sm" placeholder="ART: cyberpunk"></textarea></div>
+      </div>
+      <button onclick="executeBeginner()" class="mt-10 w-full py-6 metallic-btn font-black text-xl rounded-3xl">EXECUTE BARBANZO SCRIPT</button>
+      <pre id="beginner-out" class="hidden bg-black p-6 rounded-3xl mt-6 whitespace-pre-wrap text-sm overflow-x-auto"></pre>
+      <button id="enhance-btn-b" onclick="enhanceWithGroq('beginner')" class="hidden mt-4 w-full py-4 metallic-btn font-bold rounded-2xl">ENHANCE WITH GROQ</button>
+      <button onclick="copyOutput('beginner-out')" class="mt-4 w-full py-4 border border-gray-500 text-gray-300 rounded-2xl font-bold">COPY OUTPUT</button>
+      <button onclick="saveToHistory('beginner-out')" class="mt-4 w-full py-4 border border-gray-500 text-gray-300 rounded-2xl font-bold">SAVE TO HISTORY</button>
+    </div>
+
+    <!-- EXPERT -->
+    <div id="expert" class="hidden pt-20 max-w-md mx-auto px-6">
+      <h2 class="text-3xl font-black chrome script-font mb-8 text-center">EXPERT EDITOR</h2>
+      <textarea id="expert-text" rows="20" class="w-full bg-zinc-900 border border-cyan-500/40 rounded-xl p-4 text-sm" placeholder="BARBANZO SCRIPT:\n\nMETA:\n...\n\nEND:"></textarea>
+      <button onclick="executeExpert()" class="mt-10 w-full py-6 metallic-btn font-black text-xl rounded-3xl">EXECUTE BARBANZO SCRIPT</button>
+      <pre id="expert-out" class="hidden bg-black p-6 rounded-3xl mt-6 whitespace-pre-wrap text-sm overflow-x-auto"></pre>
+      <button id="enhance-btn-e" onclick="enhanceWithGroq('expert')" class="hidden mt-4 w-full py-4 metallic-btn font-bold rounded-2xl">ENHANCE WITH GROQ</button>
+      <button onclick="copyOutput('expert-out')" class="mt-4 w-full py-4 border border-gray-500 text-gray-300 rounded-2xl font-bold">COPY OUTPUT</button>
+      <button onclick="saveToHistory('expert-out')" class="mt-4 w-full py-4 border border-gray-500 text-gray-300 rounded-2xl font-bold">SAVE TO HISTORY</button>
+    </div>
+
+    <!-- HISTORY PAGE -->
+    <div id="history" class="hidden pt-20 max-w-md mx-auto px-6">
+      <h2 class="text-3xl font-black chrome script-font mb-8 text-center">HISTORY</h2>
+      <div id="full-history-list" class="space-y-4"></div>
+      <button onclick="clearHistory()" class="mt-8 w-full py-4 border border-red-500 text-red-300 rounded-2xl font-bold">CLEAR HISTORY</button>
+    </div>
+
+    <!-- PROFILE / CERTS -->
+    <div id="profile" class="hidden pt-20 max-w-md mx-auto px-6">
+      <h2 class="text-3xl font-black chrome script-font mb-8 text-center">CERTIFICATIONS</h2>
+      <div id="cert-list" class="space-y-4 mb-8"></div>
+      <button onclick="issueCert()" class="w-full py-4 metallic-btn font-bold">ISSUE NEW CERT</button>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="settings" class="hidden pt-20 max-w-md mx-auto px-6">
+      <h2 class="text-3xl font-black chrome script-font mb-8 text-center">SETTINGS</h2>
+      <div class="bg-zinc-950 border border-gray-700 p-6 rounded-3xl mb-4">
+        <p class="text-gray-400 text-xs uppercase mb-3">GROQ API KEY (free at groq.com)</p>
+        <input id="groq-key" type="password" class="w-full bg-black border border-cyan-500/50 rounded-2xl px-5 py-4 text-sm" placeholder="gsk_...">
+        <button onclick="saveKey()" class="mt-4 w-full py-3 metallic-btn font-bold rounded-2xl">SAVE KEY</button>
+      </div>
+      <div class="bg-zinc-950 border border-gray-700 p-6 rounded-3xl mb-4">
+        <p class="text-gray-400 text-xs uppercase mb-3">GROQ MODEL</p>
+        <select id="groq-model" class="w-full bg-black border border-cyan-500/50 rounded-2xl px-5 py-4 text-sm">
+          <option value="llama-3.3-70b-versatile">Llama 3.3 70B Versatile</option>
+          <option value="llama3-70b-8192">Llama 3 70B</option>
+          <option value="mixtral-8x7b-32768">Mixtral 8x7B</option>
+          <option value="gemma-7b-it">Gemma 7B IT</option>
+          <option value="llama3-8b-8192">Llama 3 8B</option>
+        </select>
+      </div>
+      <div class="bg-zinc-950 border border-gray-700 p-6 rounded-3xl mb-4">
+        <p class="text-gray-400 text-xs uppercase mb-3">TEMPERATURE (0.0 - 1.0)</p>
+        <input id="groq-temp" type="range" min="0" max="1" step="0.1" value="0.7" class="w-full">
+        <p class="text-center text-sm mt-2" id="temp-value">0.7</p>
+      </div>
+      <div class="bg-zinc-950 border border-gray-700 p-6 rounded-3xl mb-4">
+        <p class="text-gray-400 text-xs uppercase mb-3">MAX TOKENS</p>
+        <input id="groq-max-tokens" type="number" class="w-full bg-black border border-cyan-500/50 rounded-2xl px-5 py-4 text-sm" value="900" min="100" max="4096">
+      </div>
+      <div class="bg-zinc-950 border border-gray-700 p-6 rounded-3xl mb-4">
+        <label class="flex items-center text-gray-400 text-xs uppercase">
+          <input id="groq-stream" type="checkbox" class="mr-2">
+          ENABLE STREAMING RESPONSES
+        </label>
+      </div>
+      <div class="bg-zinc-950 border border-gray-700 p-6 rounded-3xl mb-4">
+        <p class="text-gray-400 text-xs uppercase mb-3">CUSTOM SYSTEM PROMPT</p>
+        <textarea id="groq-system-prompt" rows="4" class="w-full bg-black border border-cyan-500/50 rounded-2xl p-4 text-sm">You are the BARBANZO EXECUTOR by Michael Sanzo. Obey the exact 9-module structure. Never add, suggest or change anything the author wrote. Expand ONLY into highest quality cinematic prompt.</textarea>
+      </div>
+      <button onclick="saveGroqSettings()" class="w-full py-4 metallic-btn font-bold mb-4">SAVE GROQ SETTINGS</button>
+      <button onclick="showHelp()" class="w-full py-4 metallic-btn font-bold">VIEW HELP</button>
+    </div>
+
+    <!-- HELP MODAL -->
+    <div id="help-modal" class="hidden fixed inset-0 flex items-center justify-center z-50 bg-black/80">
+      <div class="bg-zinc-950 border border-gray-700 rounded-3xl p-8 text-sm max-h-[80vh] overflow-y-auto">
+        <h3 class="chrome script-font text-2xl font-black mb-6">BROTHER’S EXACT RULES</h3>
+        <p class="mb-6">"The author is king. The system obeys. No suggestions. No overrides."</p>
+        <p class="mb-4">Order is sacred: META → SUBJECT → CAMERA → LIGHTING → ENVIRONMENT → MOTION → ATMOSPHERE → STYLE → END</p>
+        <button onclick="hideHelp()" class="mt-8 w-full py-4 border border-gray-500 text-gray-300 rounded-2xl font-bold">CLOSE</button>
+      </div>
+    </div>
+
+    <!-- OUTPUT MODAL -->
+    <div id="output-modal" class="hidden fixed inset-0 flex items-center justify-center z-50">
+      <div id="output-content" class="p-8 rounded-3xl max-w-md w-full">
+        <pre id="modal-output" class="whitespace-pre-wrap text-sm overflow-x-auto"></pre>
+        <button onclick="hideOutputModal()" class="mt-4 w-full py-4 border border-gray-500 text-gray-300 rounded-2xl font-bold">CLOSE</button>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <footer class="fixed bottom-0 left-0 right-0 h-16 flex justify-around items-center z-50 matte">
+      <button onclick="navTo('home')" class="nav-btn"><i class="fa-solid fa-home text-2xl"></i><span>Home</span></button>
+      <button onclick="navTo('beginner')" class="nav-btn"><i class="fa-solid fa-tools text-2xl"></i><span>Beginner</span></button>
+      <button onclick="navTo('expert')" class="nav-btn"><i class="fa-solid fa-edit text-2xl"></i><span>Expert</span></button>
+      <button onclick="navTo('settings')" class="nav-btn"><i class="fa-solid fa-gear text-2xl"></i><span>Settings</span></button>
+      <button onclick="navTo('profile')" class="nav-btn"><i class="fa-solid fa-user text-2xl"></i><span>Profile</span></button>
+    </footer>
+  </div>
+
+  <script>
+    let groqKey = localStorage.getItem('groqKey') || '';
+    let groqModel = localStorage.getItem('groqModel') || 'llama-3.3-70b-versatile';
+    let groqTemp = parseFloat(localStorage.getItem('groqTemp') || 0.7);
+    let groqMaxTokens = parseInt(localStorage.getItem('groqMaxTokens') || 900);
+    let groqStream = localStorage.getItem('groqStream') === 'true';
+    let groqSystemPrompt = localStorage.getItem('groqSystemPrompt') || "You are the BARBANZO EXECUTOR by Michael Sanzo. Obey the exact 9-module structure. Never add, suggest or change anything the author wrote. Expand ONLY into highest quality cinematic prompt.";
+    let certs = JSON.parse(localStorage.getItem('barbanzoCerts') || '[]');
+    let history = JSON.parse(localStorage.getItem('barbanzoHistory') || '[]');
+    let currentPage = 'home';
+    let selectedPreset = '';
+
+    function saveKey() {
+      groqKey = document.getElementById('groq-key').value.trim();
+      if (groqKey) localStorage.setItem('groqKey', groqKey);
+      alert(groqKey ? 'Key saved — real quality unlocked' : 'Key required for Groq');
+    }
+
+    function saveGroqSettings() {
+      groqModel = document.getElementById('groq-model').value;
+      groqTemp = parseFloat(document.getElementById('groq-temp').value);
+      groqMaxTokens = parseInt(document.getElementById('groq-max-tokens').value);
+      groqStream = document.getElementById('groq-stream').checked;
+      groqSystemPrompt = document.getElementById('groq-system-prompt').value.trim();
+      localStorage.setItem('groqModel', groqModel);
+      localStorage.setItem('groqTemp', groqTemp);
+      localStorage.setItem('groqMaxTokens', groqMaxTokens);
+      localStorage.setItem('groqStream', groqStream);
+      localStorage.setItem('groqSystemPrompt', groqSystemPrompt);
+      alert('Groq settings saved');
+    }
+
+    function enterAcademy() {
+      document.getElementById('splash').style.display = 'none';
+      document.getElementById('app').classList.remove('hidden');
+      navTo('home');
+      renderCerts();
+      renderHistory();
+      loadGroqSettings();
+    }
+
+    function loadGroqSettings() {
+      if (document.getElementById('groq-model')) document.getElementById('groq-model').value = groqModel;
+      if (document.getElementById('groq-temp')) {
+        document.getElementById('groq-temp').value = groqTemp;
+        document.getElementById('temp-value').textContent = groqTemp;
+      }
+      if (document.getElementById('groq-max-tokens')) document.getElementById('groq-max-tokens').value = groqMaxTokens;
+      if (document.getElementById('groq-stream')) document.getElementById('groq-stream').checked = groqStream;
+      if (document.getElementById('groq-system-prompt')) document.getElementById('groq-system-prompt').value = groqSystemPrompt;
+
+      const tempSlider = document.getElementById('groq-temp');
+      if (tempSlider) tempSlider.oninput = () => document.getElementById('temp-value').textContent = tempSlider.value;
+    }
+
+    function navTo(page) {
+      document.querySelectorAll('#app > div[id]').forEach(d => d.classList.add('hidden'));
+      document.getElementById(page).classList.remove('hidden');
+      currentPage = page;
+      window.scrollTo(0,0);
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('nav-btn-active'));
+      const activeBtn = document.querySelector(`button[onclick="navTo('${page}')"]`);
+      if (activeBtn) activeBtn.classList.add('nav-btn-active');
+      if (page === 'settings') loadGroqSettings();
+      if (page === 'history') renderFullHistory();
+      if (page === 'home') renderHistory();
+    }
+
+    function showHelp() {
+      document.getElementById('help-modal').classList.remove('hidden');
+    }
+    function hideHelp() {
+      document.getElementById('help-modal').classList.add('hidden');
+    }
+
+    function selectPreset(preset) {
+      selectedPreset = preset;
+      document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('bg-cyan-900'));
+      const btn = Array.from(document.querySelectorAll('.preset-btn')).find(b => b.textContent === preset);
+      if (btn) btn.classList.add('bg-cyan-900');
+    }
+
+    async function generateScript() {
+      const prompt = document.getElementById('prompt-input').value.trim();
+      if (!prompt) return alert('Enter a prompt first');
+      if (!selectedPreset) return alert('Select a style preset');
+
+      let script = `BARBANZO SCRIPT:\n\nMETA:\nMODE: IMAGE\nTONE: ${selectedPreset.toUpperCase()}\n\nSUBJECT:\n${prompt}\n\nEND:\nAR: 9:16\nSTYLIZE: ISO\nMODE: RAW`;
+
+      if (groqKey) {
+        await enhanceScript(script, null, true); // Stream to modal
+      } else {
+        showOutputModal(script);
+      }
+    }
+
+    async function enhanceScript(current, mode = null, streamToModal = false) {
+      if (!groqKey) return 'No Groq key set';
+      const body = JSON.stringify({
+        model: groqModel,
+        messages: [{
+          role: "system",
+          content: groqSystemPrompt
+        }, { role: "user", content: current }],
+        temperature: groqTemp,
+        max_tokens: groqMaxTokens,
+        stream: groqStream
+      });
+
+      try {
+        const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${groqKey}`, 'Content-Type': 'application/json' },
+          body
+        });
+        if (!res.ok) {
+          const error = await res.json();
+          return `Groq error: ${error.error?.message || 'Unknown error'}`;
+        }
+
+        if (groqStream) {
+          const reader = res.body.getReader();
+          let outputEl;
+          if (mode) {
+            outputEl = document.getElementById(mode + '-out');
+            outputEl.textContent = '';
+          } else {
+            document.getElementById('modal-output').textContent = '';
+            document.getElementById('output-modal').classList.remove('hidden');
+            outputEl = document.getElementById('modal-output');
+          }
+          let fullResponse = '';
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            const chunk = new TextDecoder().decode(value);
+            const lines = chunk.split('\n');
+            for (const line of lines) {
+              if (line.startsWith('data: ')) {
+                const data = line.slice(6);
+                if (data === '[DONE]') continue;
+                try {
+                  const parsed = JSON.parse(data);
+                  const delta = parsed.choices[0].delta.content;
+                  if (delta) {
+                    fullResponse += delta;
+                    outputEl.textContent = fullResponse;
+                    outputEl.scrollTop = outputEl.scrollHeight;
+                  }
+                } catch (e) {}
+              }
+            }
+          }
+          if (!mode) {
+            const descMap = {
+              Elegant: 'A flowing script design for a luxury brand',
+              Custom: 'Bold typography with gold accents',
+              Classic: 'Traditional serif font for formal documents'
+            };
+            const prompt = document.getElementById('prompt-input').value.trim();
+            history.unshift({ title: `${selectedPreset} - ${prompt.slice(0, 20)}...`, desc: descMap[selectedPreset] || 'Custom generated script', content: fullResponse });
+            localStorage.setItem('barbanzoHistory', JSON.stringify(history));
+            renderHistory();
+          }
+          return fullResponse;
+        } else {
+          const data = await res.json();
+          const content = data.choices?.[0]?.message?.content || 'Groq error';
+          if (mode) {
+            document.getElementById(mode + '-out').textContent = content;
+          } else {
+            showOutputModal(content);
+          }
+          return content;
+        }
+      } catch(e) { return `Groq error: ${e.message}`; }
+    }
+
+    function renderHistory() {
+      const list = document.getElementById('history-list');
+      if (list) list.innerHTML = history.slice(0, 3).map((item, i) => `
+        <div class="history-item">
+          <p class="text-white font-bold">${item.title}</p>
+          <p class="text-gray-400 text-xs">${item.desc}</p>
+          <button class="history-view-btn mt-2" onclick="showOutputModal('${escape(item.content)}')">View</button>
+        </div>
+      `).join('');
+    }
+
+    function renderFullHistory() {
+      const list = document.getElementById('full-history-list');
+      list.innerHTML = history.map((item, i) => `
+        <div class="history-item">
+          <p class="text-white font-bold">${item.title}</p>
+          <p class="text-gray-400 text-xs">${item.desc}</p>
+          <button class="history-view-btn mt-2" onclick="showOutputModal('${escape(item.content)}')">View</button>
+          <button class="history-delete-btn text-xl" onclick="deleteHistoryItem(${i})"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      `).join('');
+    }
+
+    function deleteHistoryItem(index) {
+      history.splice(index, 1);
+      localStorage.setItem('barbanzoHistory', JSON.stringify(history));
+      renderFullHistory();
+      renderHistory();
+    }
+
+    function clearHistory() {
+      if (confirm('Clear all history?')) {
+        history = [];
+        localStorage.setItem('barbanzoHistory', JSON.stringify(history));
+        renderFullHistory();
+        renderHistory();
+      }
+    }
+
+    function showOutputModal(content) {
+      document.getElementById('modal-output').textContent = content;
+      document.getElementById('output-modal').classList.remove('hidden');
+    }
+
+    function hideOutputModal() {
+      document.getElementById('output-modal').classList.add('hidden');
+    }
+
+    function executeBeginner() {
+      let script = `BARBANZO SCRIPT:\n\n`;
+      ['meta','subject','camera','lighting','env','motion','atmo','style'].forEach(m => {
+        const val = document.getElementById(`b-${m}`).value.trim();
+        script += `${m.toUpperCase().replace('ENV','ENVIRONMENT').replace('ATMO','ATMOSPHERE')}:\n${val}\n\n`;
+      });
+      script += `END:\n  AR: 9:16\n  STYLIZE: ISO\n  MODE: RAW`;
+      const out = document.getElementById('beginner-out');
+      out.textContent = script;
+      out.classList.remove('hidden');
+      document.getElementById('enhance-btn-b').classList.remove('hidden');
+    }
+
+    function executeExpert() {
+      const out = document.getElementById('expert-out');
+      out.textContent = document.getElementById('expert-text').value.trim();
+      out.classList.remove('hidden');
+      document.getElementById('enhance-btn-e').classList.remove('hidden');
+    }
+
+    async function enhanceWithGroq(mode) {
+      if (!groqKey) return alert('Save Groq key first');
+      const outEl = document.getElementById(mode + '-out');
+      const current = outEl.textContent;
+      outEl.textContent = 'Calling Groq — staying 100% faithful to Brother...';
+      await enhanceScript(current, mode);
+    }
+
+    function copyOutput(id) {
+      const text = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(text).then(() => alert('✅ Copied — paste anywhere'));
+    }
+
+    function saveToHistory(id) {
+      const content = document.getElementById(id).textContent;
+      const title = prompt('Enter title for this script:');
+      if (title) {
+        history.unshift({ title, desc: 'User-generated script', content });
+        localStorage.setItem('barbanzoHistory', JSON.stringify(history));
+        renderHistory();
+        alert('Saved to history');
+      }
+    }
+
+    function renderCerts() {
+      const container = document.getElementById('cert-list');
+      container.innerHTML = certs.map((c,i) => `
+        <div class="bg-zinc-950 border border-gray-700 p-8 rounded-3xl text-center">
+          <div class="text-xs text-gray-400">CERT #${i+1}</div>
+          <div class="text-2xl font-black chrome script-font mt-2">BARBANZO SCRIPT MASTER</div>
+        </div>
+      `).join('');
+    }
+
+    function issueCert() {
+      certs.unshift({});
+      localStorage.setItem('barbanzoCerts', JSON.stringify(certs));
+      renderCerts();
+    }
+
+    // Auto enter for testing (remove comment when done)
+    // enterAcademy();
+  </script>
+</body>
+</html>
